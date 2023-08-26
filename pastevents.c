@@ -1,6 +1,5 @@
 #include "pastevents.h"
 
-
 void execute_past_event(int index)
 {
     char full_path[256];
@@ -61,7 +60,7 @@ void purge_past_events(int *num_lines)
     printf("Past events cleared.\n");
 }
 
-void print_recent_past_events(int* linecount)
+void print_recent_past_events(int *linecount)
 {
     for (int i = 0; i < *linecount; i++)
     {
@@ -69,7 +68,7 @@ void print_recent_past_events(int* linecount)
     }
 }
 
-void pastevents(char *tokens[], int num_tokens, int* linecount)
+void pastevents(char *tokens[], int num_tokens, int *linecount)
 {
     if (num_tokens == 1)
     {
@@ -97,14 +96,13 @@ int checkHistory()
     char full_path[256];
 
     sprintf(full_path, "%s/%s", home_directory, ".history");
-    int linecount = 0; 
+    int linecount = 0;
     FILE *file = fopen(full_path, "r"); // Replace "example.txt" with your file's name
     if (file == NULL)
     {
         perror("Error opening file");
         return 1;
     }
-
 
     // Read lines from the file
     while (linecount < MAX_PAST_EVENTS && fgets(past_commands[linecount], MAX_COMMAND_LENGTH, file) != NULL)
@@ -126,42 +124,56 @@ int checkHistory()
     // }
 }
 
-void shiftStringsUp( int lineCount) {
-    for (int i = 0; i < lineCount - 1; i++) {
+void shiftStringsUp(int lineCount)
+{
+    for (int i = 0; i < lineCount - 1; i++)
+    {
         strcpy(past_commands[i], past_commands[i + 1]);
     }
 }
 
-void addStringToPastCommands(const char *newLine, int *num_lines) {
+void addStringToPastCommands(const char *newLine, int *num_lines)
+{
 
     char full_path[256];
 
     sprintf(full_path, "%s/%s", home_directory, ".history");
-
-    if (*num_lines < MAX_PAST_EVENTS) {
+    if (*num_lines > 0 && strcmp(past_commands[*num_lines - 1], newLine) == 0)
+    {
+        // If the new string is the same as the last one, don't add it
+        return;
+    }
+    if (*num_lines < MAX_PAST_EVENTS)
+    {
         strcpy(past_commands[*num_lines], newLine);
         (*num_lines)++;
-    } else {
+    }
+    else
+    {
         shiftStringsUp(*num_lines);
         strcpy(past_commands[MAX_PAST_EVENTS - 1], newLine);
     }
 
-
     // Delete the file if it exists
-    if (remove(full_path) == 0) {
+    if (remove(full_path) == 0)
+    {
         // printf("Deleted %s\n", full_path);
-    } else {
+    }
+    else
+    {
         perror("Error deleting file");
     }
 
     // Create the file again for writing
     FILE *file = fopen(full_path, "w");
-    if (file == NULL) {
+    if (file == NULL)
+    {
         perror("Error creating file");
         return;
     }
     // Write the array of strings into the file
-    for (int i = 0; i < *num_lines; i++) {
+    for (int i = 0; i < *num_lines; i++)
+    {
         fprintf(file, "%s\n", past_commands[i]);
 
         // printf("%s \n", past_commands[i]);
