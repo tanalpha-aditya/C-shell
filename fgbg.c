@@ -15,6 +15,7 @@ void execute_foreground_process(char *tokens[], int num_tokens)
     else if (pid > 0)
     {
         // Parent process
+        // *current_foreground_pid = pid;
         waitpid(pid, NULL, 0); // Wait for the child process to finish
     }
     else
