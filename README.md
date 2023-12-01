@@ -1,32 +1,25 @@
-running the shell 
 
-make
-./main
-
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/76mHqLr5)
 # Description
-warp - acts like cd
-peek - ls 
-pastevents 
-foreground / background 
-proclore
-seek
+Mostly same as mentioned in the documents if different mentioned in assumptions.
+## Running the Shell
+
+    1. run `make` 
+    2. run `./main`
 
 # Assumptions
-all the functions of warp as specified in the document are applied.
 
-peek -a <path/name>
-peek -l <path/name>
-peek -a -l <path/name>
-peek -l -a <path/name>
-peek -la <path/name>
-peek -al <path/name>
+-> The prompt is colour coded as green
 
-in peek, the <path/name> is not working rest all flags are working. 
+-> peek -l -a can be executed with any number spaces between them but there should be only 1 space between l and a.
 
-in pastevents all the commands are working except execute. 
+-> If pastevents execute calls an index which is more than elements in history it returns an error
 
-In forground background if the command takes longer than only the last background running command will give msg of completion. 
+-> The pid of background process is printed when spawned and again when it ends(so it might get between the prompts sometime)
 
-proclore wroking perfectly
+-> The '&' for background process should be passed, without spaces, it may not work sometimes with space.
 
-seek not working as of 26th AUG
+-> havent tested ping for any other signal than 9.
+
+-> calling iman will also print a bit of other data than what was given in assignment.
+

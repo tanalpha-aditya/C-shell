@@ -14,7 +14,7 @@ void execute_past_event(int index)
 
     char line[MAX_COMMAND_LENGTH];
     char original_command[MAX_COMMAND_LENGTH]; // Store the original command
-    int count = 0;
+    int count = 1;
     while (fgets(line, sizeof(line), file))
     {
         if (count == index)
@@ -25,10 +25,18 @@ void execute_past_event(int index)
         }
         count++;
     }
+    int linecount = 0 ;
+    original_command[strlen(original_command) - 1] = '\0';
+    while (fgets(line, sizeof(line), file))
+    {
+        linecount++;
+    }
 
     fclose(file);
-
+    // printf("%s %d", original_command, count);
     // Execute the original command
+
+    executee(original_command, &linecount);
     if (strlen(original_command) > 0)
     {
         // Process the original command

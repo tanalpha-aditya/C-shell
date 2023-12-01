@@ -1,7 +1,8 @@
 #include "peek.h"
 int show_hidden = 0; // Default: do not show hidden files
 
-int compare_names(const void *a, const void *b) {
+int compare_names(const void *a, const void *b)
+{
     return strcmp(*(const char **)a, *(const char **)b);
 }
 
@@ -14,8 +15,10 @@ void list_directory(const char *path)
         return;
     }
 
+    // printf("%s\n",path);
+
     struct dirent *entry;
-    char *entries[100]; // You can adjust the size as needed
+    char *entries[10000]; // You can adjust the size as needed
     int entry_count = 0;
 
     while ((entry = readdir(dir)) != NULL)
@@ -35,10 +38,52 @@ void list_directory(const char *path)
     qsort(entries, entry_count, sizeof(char *), compare_names);
 
     // Print the sorted entries
+    // for (int i = 0; i < entry_count; i++)
+    // {
+    //     printf("%s\n", entries[i]);
+    //     free(entries[i]); // Free memory allocated for each entry
+    // }
+
+    // Print the sorted entries with color coding
+    // Print the sorted entries with color coding
     for (int i = 0; i < entry_count; i++)
     {
-        printf("%s\n", entries[i]);
-        free(entries[i]); // Free memory allocated for each entry
+        // Check if entries[i] is a valid string
+        if (entries[i] != NULL)
+        {
+            char *entry_path = malloc(11111);
+            if (entry_path == NULL)
+            {
+                perror("malloc");
+                exit(EXIT_FAILURE);
+            }
+            snprintf(entry_path, 11111, "%s/%s", path, entries[i]);
+
+            // Check if it's a directory
+            struct stat entry_stat;
+            if (lstat(entry_path, &entry_stat) == -1)
+            {
+                perror("lstat");
+                continue;
+            }
+
+            if (S_ISDIR(entry_stat.st_mode))
+            {
+                printf("%s%s/%s%s\n", COLOR_BLUE, entries[i], COLOR_RESET);
+            }
+            else if (S_ISREG(entry_stat.st_mode))
+            {
+                printf("%s%s%s\n", COLOR_GREEN, entries[i], COLOR_RESET);
+            }
+            else
+            {
+                // Handle other file types differently or skip them
+                printf("%s%s (unknown type)%s\n", COLOR_RESET, entries[i], COLOR_RESET);
+            }
+
+            free(entry_path);
+            free(entries[i]); // Free memory allocated for each entry
+        }
     }
 }
 
@@ -145,11 +190,11 @@ void peek(char *input_peek)
     if (result_tokens != NULL)
     {
         int i = 0;
-        while (result_tokens[i] != NULL)
-        {
-            printf("Token %d: %s\n", i, result_tokens[i]);
-            i++;
-        }
+        // while (result_tokens[i] != NULL)
+        // {
+        //     printf("Token %d: %s\n", i, result_tokens[i]);
+        //     i++;
+        // }
 
         int m = 0;
 
@@ -177,7 +222,7 @@ void peek_final(char *tokens[], int num_tokens)
     }
     else if (num_tokens == 2)
     {
-        
+
         if ((strcmp(tokens[1], "-a") == 0))
         {
             show_hidden = 1;
@@ -194,7 +239,8 @@ void peek_final(char *tokens[], int num_tokens)
             list_detailed(current_directory);
         }
     }
-    else if( num_tokens == 3){
+    else if (num_tokens == 3)
+    {
         if ((strcmp(tokens[1], "-a") == 0) && (strcmp(tokens[2], "-l") == 0))
         {
             show_hidden = 1;

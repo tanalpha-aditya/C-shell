@@ -1,41 +1,27 @@
 #include "headers.h"
-
-// void get_relative_path(char *cwd, char *home_dir, char *rel_path)
-// {
-//     char rel
-//     if (strncmp(cwd, home_dir, strlen(home_dir)) == 0)
-//     {
-//         if (strlen(cwd) >= strlen(home_dir))
-//         {s
-//             strcpy(rel_path, "~");
-
-            
-//         }
-//     }
-//     else
-//     {
-//         strcpy(rel_path, cwd);
-//     }
-// }
-
+  
 void generate_prompt(char *username, char *system_name, char *cwd, char *prompt)
 {
-    // char rel_path[MAX_COMMAND_LENGTH];
-    // void get_relative_path(cwd, home_directory, rel_path);
-    sprintf(prompt, "<%s@%s:%s>", username, system_name, cwd);
+    // ANSI escape code for setting text color to green
+    char green_color[] = "\x1B[32m";
+
+    // ANSI escape code for resetting text color to default
+    char reset_color[] = "\x1B[0m";
+
+    sprintf(prompt, "%s<%s@%s:%s>%s", green_color, username, system_name, cwd, reset_color);
     if (strcmp(home_directory, current_directory) == 0)
     {
-        printf("<%s@%s:~> ", username, system_name);
+        printf("%s<%s@%s:~> %s", green_color, username, system_name, reset_color);
     }
     else if(strncmp(home_directory, current_directory, strlen(home_directory)) == 0) {
-        printf("<%s@%s:~%s> ", username, system_name, current_directory + strlen(home_directory));
+        printf("%s<%s@%s:~%s> %s", green_color, username, system_name, current_directory + strlen(home_directory), reset_color);
     }
-    // If i am not in my home directory
+    // If not in home directory
     else
     {
-        printf("<%s@%s:%s> ", username, system_name, current_directory);
+        printf("%s<%s@%s:%s> %s", green_color, username, system_name, current_directory, reset_color);
     }
-}   
+}
 
 
 void prompt()
